@@ -77,10 +77,43 @@ button:hover {
     align-items: flex-start;
 }
 
-canvas {
+.game-board {
+    position: relative;
     border: 3px solid #667eea;
     border-radius: 10px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    background: #000;
+    overflow: hidden;
+}
+
+#gameBoard {
+    display: block;
+}
+
+.game-over {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    z-index: 1000;
+}
+
+.game-over h2 {
+    color: #667eea;
+    margin-bottom: 20px;
+    font-size: 32px;
+}
+
+.game-over button {
+    margin-top: 20px;
+    padding: 12px 30px;
+    font-size: 18px;
 }
 
 .info {
@@ -119,35 +152,11 @@ canvas {
     margin-bottom: 10px;
 }
 
-#nextCanvas {
+#nextPiece {
+    display: block;
+    background: #000;
     border: 2px solid #667eea;
     border-radius: 5px;
-}
-
-.game-over {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 40px;
-    border-radius: 20px;
-    text-align: center;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-    z-index: 1000;
-}
-
-.game-over h2 {
-    color: #667eea;
-    margin-bottom: 20px;
-    font-size: 32px;
-}
-
-.game-over button {
-    margin-top: 20px;
-    padding: 12px 30px;
-    font-size: 18px;
 }
 
 .instructions {
@@ -160,4 +169,37 @@ canvas {
 
 .instructions strong {
     color: #667eea;
+}
+
+/* SVG Block styles */
+.tetris-block {
+    transition: transform 0.05s linear;
+}
+
+.tetris-block rect {
+    stroke: rgba(0, 0, 0, 0.3);
+    stroke-width: 1;
+}
+
+/* Locked blocks get a subtle glow */
+.locked-block rect {
+    filter: drop-shadow(0 0 3px currentColor);
+}
+
+/* Line clear animation */
+@keyframes lineClear {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.3;
+        fill: white;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.clearing-line {
+    animation: lineClear 0.3s ease-out;
 }
