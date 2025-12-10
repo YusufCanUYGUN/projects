@@ -166,6 +166,23 @@ document.addEventListener('DOMContentLoaded', function() {
         COLS = parseInt(document.getElementById('cols').value);
         speed = parseInt(document.getElementById('speed').value);
         
+        // Adjust block size based on screen width
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+        
+        if (screenWidth <= 480) {
+            // Small phones - fit to screen width
+            BLOCK_SIZE = Math.floor((screenWidth - 60) / COLS);
+            BLOCK_SIZE = Math.min(BLOCK_SIZE, 20);
+        } else if (screenWidth <= 768) {
+            // Tablets and larger phones
+            BLOCK_SIZE = Math.floor((screenWidth * 0.6) / COLS);
+            BLOCK_SIZE = Math.min(BLOCK_SIZE, 25);
+        } else {
+            // Desktop
+            BLOCK_SIZE = 25;
+        }
+        
         gameBoard.setAttribute('width', COLS * BLOCK_SIZE);
         gameBoard.setAttribute('height', ROWS * BLOCK_SIZE);
         
@@ -455,4 +472,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Start the game when page loads
     startGame();
+    
+    // Handle window resize
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            if (!isGameOver) {
+                // Recalculate and redraw board
+                const oldBlockSize = BLOCK_SIZE;
+                initBoard();
+                drawBoard();
+                if (currentPiece) {
+                    currentPiece.createSVG();
+                }
+            }
+        }, 250);
+    });
 });

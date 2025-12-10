@@ -11,6 +11,7 @@ body {
     align-items: center;
     min-height: 100vh;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 10px;
 }
 
 .container {
@@ -18,12 +19,15 @@ body {
     padding: 30px;
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    max-width: 100%;
+    width: 100%;
 }
 
 h1 {
     text-align: center;
     color: #667eea;
     margin-bottom: 20px;
+    font-size: clamp(24px, 5vw, 36px);
 }
 
 .controls {
@@ -32,6 +36,7 @@ h1 {
     margin-bottom: 20px;
     flex-wrap: wrap;
     align-items: center;
+    justify-content: center;
 }
 
 .control-group {
@@ -75,6 +80,7 @@ button:hover {
     gap: 30px;
     justify-content: center;
     align-items: flex-start;
+    flex-wrap: wrap;
 }
 
 .game-board {
@@ -88,6 +94,8 @@ button:hover {
 
 #gameBoard {
     display: block;
+    width: 100%;
+    height: auto;
 }
 
 .touch-controls {
@@ -114,7 +122,7 @@ button:hover {
 }
 
 .touch-zone span {
-    font-size: 48px;
+    font-size: clamp(32px, 8vw, 48px);
     color: rgba(255, 255, 255, 0);
     text-shadow: 0 0 10px rgba(255, 255, 255, 0);
     transition: all 0.1s;
@@ -158,6 +166,18 @@ button:hover {
     .touch-controls {
         display: grid;
     }
+    
+    .container {
+        padding: 15px;
+    }
+    
+    .game-area {
+        gap: 15px;
+    }
+    
+    .info {
+        width: 100%;
+    }
 }
 
 .grid-line {
@@ -177,12 +197,13 @@ button:hover {
     text-align: center;
     box-shadow: 0 20px 60px rgba(0,0,0,0.4);
     z-index: 1000;
+    max-width: 90%;
 }
 
 .game-over h2 {
     color: #667eea;
     margin-bottom: 20px;
-    font-size: 32px;
+    font-size: clamp(24px, 6vw, 32px);
 }
 
 .game-over button {
@@ -240,6 +261,7 @@ button:hover {
     background: #f8f9fa;
     border-radius: 10px;
     font-size: 14px;
+    text-align: center;
 }
 
 .instructions strong {
@@ -277,4 +299,123 @@ button:hover {
 
 .clearing-line {
     animation: lineClear 0.3s ease-out;
+}
+
+/* Small phones (portrait) */
+@media (max-width: 480px) {
+    body {
+        padding: 5px;
+    }
+    
+    .container {
+        padding: 10px;
+    }
+    
+    h1 {
+        margin-bottom: 10px;
+    }
+    
+    .controls {
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+    
+    input, select, button {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+    
+    input[type="number"] {
+        width: 60px;
+    }
+    
+    .game-area {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .game-board {
+        max-width: 100%;
+    }
+    
+    .info {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .info-box, .next-piece {
+        min-width: 120px;
+        padding: 10px;
+    }
+    
+    .info-box h3, .next-piece h3 {
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+    
+    .info-box p {
+        font-size: 20px;
+    }
+    
+    .instructions {
+        font-size: 12px;
+        padding: 10px;
+    }
+    
+    .game-over {
+        padding: 20px;
+    }
+    
+    .game-over p {
+        font-size: 16px !important;
+    }
+    
+    .game-over button {
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+}
+
+/* Landscape mode for phones */
+@media (max-width: 768px) and (orientation: landscape) {
+    body {
+        padding: 5px;
+    }
+    
+    .container {
+        padding: 10px;
+        max-height: 100vh;
+        overflow-y: auto;
+    }
+    
+    h1 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+    
+    .controls {
+        margin-bottom: 10px;
+    }
+    
+    .game-area {
+        gap: 15px;
+    }
+    
+    .instructions {
+        display: none;
+    }
+}
+
+/* Tablets */
+@media (min-width: 481px) and (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+    
+    .game-board {
+        max-width: 80vw;
+    }
 }
