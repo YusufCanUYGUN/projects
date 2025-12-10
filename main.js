@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let gameLoop = null;
     let isPaused = false;
     let isGameOver = false;
+    let isHoldingDown = false;
+    let holdDownInterval = null;
 
     // SVG namespace
     const svgNS = "http://www.w3.org/2000/svg";
@@ -131,6 +133,34 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function drawGridLines() {
+        // Remove existing grid lines
+        const existingLines = gameBoard.querySelectorAll('.grid-line');
+        existingLines.forEach(line => line.remove());
+
+        // Draw vertical lines for each column
+        for (let col = 1; col < COLS; col++) {
+            const line = document.createElementNS(svgNS, 'line');
+            line.setAttribute('x1', col * BLOCK_SIZE);
+            line.setAttribute('y1', 0);
+            line.setAttribute('x2', col * BLOCK_SIZE);
+            line.setAttribute('y2', ROWS * BLOCK_SIZE);
+            line.classList.add('grid-line');
+            gameBoard.appendChild(line);
+        }
+
+        // Draw horizontal lines for each row
+        for (let row = 1; row < ROWS; row++) {
+            const line = document.createElementNS(svgNS, 'line');
+            line.setAttribute('x1', 0);
+            line.setAttribute('y1', row * BLOCK_SIZE);
+            line.setAttribute('x2', COLS * BLOCK_SIZE);
+            line.setAttribute('y2', row * BLOCK_SIZE);
+            line.classList.add('grid-line');
+            gameBoard.appendChild(line);
+        }
+    }
+
     function initBoard() {
         ROWS = parseInt(document.getElementById('rows').value);
         COLS = parseInt(document.getElementById('cols').value);
@@ -143,6 +173,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Clear the SVG
         gameBoard.innerHTML = '';
+        
+        // Draw grid lines
+        drawGridLines();
     }
 
     function createPiece() {
@@ -155,7 +188,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const lockedBlocks = gameBoard.querySelectorAll('.locked-block');
         lockedBlocks.forEach(block => block.remove());
 
-        // Draw locked blocks
+        // Redraw grid lines first
+        drawGridLines();
+
+        // Draw locked blocks on top
         for (let row = 0; row < ROWS; row++) {
             for (let col = 0; col < COLS; col++) {
                 if (board[row][col]) {
@@ -316,6 +352,76 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('newGameBtn').addEventListener('click', startGame);
     document.getElementById('pauseBtn').addEventListener('click', togglePause);
     document.getElementById('playAgainBtn').addEventListener('click', startGame);
+
+    // Touch controls
+    const touchZones = document.querySelectorAll('.touch-zone');
+    
+    touchZones.forEach(zone => {
+        const action = zone.getAttribute('data-action');
+        
+        // Touch start
+        zone.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (!currentPiece || isPaused || isGameOver) return;
+            
+            zone.classList.add('active');
+            
+            switch(action) {
+                case 'left':
+                    currentPiece.move(-1, 0);
+                    break;
+                case 'right':
+                    currentPiece.move(1, 0);
+                    break;
+                case 'rotate':
+                    currentPiece.rotate();
+                    break;
+                case 'down':
+                    // Single tap moves down once
+                    if (!currentPiece.move(0, 1)) {
+                        lockPiece();
+                    }
+                    // Start holding behavior
+                    isHoldingDown = true;
+                    holdDownInterval = setTimeout(() => {
+                        if (isHoldingDown) {
+                            // Drop all the way down
+                            while (currentPiece.move(0, 1)) {}
+                            lockPiece();
+                        }
+                    }, 300); // 300ms hold to trigger hard drop
+                    break;
+            }
+        });
+        
+        // Touch end
+        zone.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            zone.classList.remove('active');
+            
+            if (action === 'down') {
+                isHoldingDown = false;
+                if (holdDownInterval) {
+                    clearTimeout(holdDownInterval);
+                    holdDownInterval = null;
+                }
+            }
+        });
+        
+        // Touch cancel
+        zone.addEventListener('touchcancel', (e) => {
+            e.preventDefault();
+            zone.classList.remove('active');
+            
+            if (action === 'down') {
+                isHoldingDown = false;
+                if (holdDownInterval) {
+                    clearTimeout(holdDownInterval);
+                    holdDownInterval = null;
+                }
+            }
+        });
+    });
 
     document.addEventListener('keydown', (e) => {
         if (!currentPiece || isPaused || isGameOver) return;
