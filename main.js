@@ -32,10 +32,40 @@ document.addEventListener('DOMContentLoaded', function() {
         [[0,1,1],[1,1,0]], // S
         [[1,1,0],[0,1,1]]  // Z
     ];
+function randomRgbColor() {
+
+    let r = randomInteger(255);
+
+    let g = randomInteger(255);
+
+    let b = randomInteger(255);
+
+    return [r,g,b];
+
+}
+
+    function randomHexColor() {
+
+    let [r,g,b] =randomRgbColor();
+
+    let hr = r.toString(16).padStart(2, '0');
+
+    let hg = g.toString(16).padStart(2, '0');
+
+    let hb = b.toString(16).padStart(2, '0');
+
+    return "#" + hr + hg + hb;
+
+}
+
+
+
+
+
 
     const COLORS = [
-        '#00f0f0', '#f0f000', '#a000f0', '#f0a000',
-        '#0000f0', '#00f000', '#f00000'
+        randomHexColor(), randomHexColor(), randomHexColor(), randomHexColor(),
+        randomHexColor(), randomHexColor(), randomHexColor()
     ];
 
     class Piece {
