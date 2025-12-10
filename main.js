@@ -57,16 +57,13 @@ function randomRgbColor() {
     return "#" + hr + hg + hb;
 
 }
+var COLORS;
 
 
 
 
 
-
-    const COLORS = [
-        randomHexColor(), randomHexColor(), randomHexColor(), randomHexColor(),
-        randomHexColor(), randomHexColor(), randomHexColor()
-    ];
+    
 
     class Piece {
         constructor(shape, color) {
@@ -195,7 +192,10 @@ function randomRgbColor() {
         ROWS = parseInt(document.getElementById('rows').value);
         COLS = parseInt(document.getElementById('cols').value);
         speed = parseInt(document.getElementById('speed').value);
-        
+         COLORS = [
+        randomHexColor(), randomHexColor(), randomHexColor(), randomHexColor(),
+        randomHexColor(), randomHexColor(), randomHexColor()
+    ];
         gameBoard.setAttribute('width', COLS * BLOCK_SIZE);
         gameBoard.setAttribute('height', ROWS * BLOCK_SIZE);
         
